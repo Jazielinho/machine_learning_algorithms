@@ -54,16 +54,38 @@ def knn_clasificacion(X_train, y_train, X_test, nombre_distancia, K) -> np.array
 if __name__ == '__main__':
 
     ''' GENERANDO DATOS '''
-    X, y = make_classification(n_samples=1000, n_features=2, n_informative=2,
-                               n_redundant=0, n_repeated=0, n_classes=4,
-                               n_clusters_per_class=1, random_state=123456)
+    X, y = make_classification(n_samples=1000,
+                               n_features=2,
+                               n_informative=2,
+                               n_redundant=0,
+                               n_repeated=0,
+                               n_classes=4,
+                               n_clusters_per_class=1,
+                               random_state=2022)
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=123456, test_size=0.2)
-    
-    plt.scatter(X_train[y_train == 0, 0], X_train[y_train == 0, 1], c='b')
-    plt.scatter(X_train[y_train == 1, 0], X_train[y_train == 1, 1], c='g')
-    plt.scatter(X_train[y_train == 2, 0], X_train[y_train == 2, 1], c='r')
-    plt.scatter(X_train[y_train == 3, 0], X_train[y_train == 3, 1], c='c')
+    ''' DIVIDIENDO LOS DATOS EN ENTRENAMIENTO Y TEST '''
+    X_train, X_test, y_train, y_test = train_test_split(X, y,
+                                                        random_state=123456,
+                                                        test_size=0.2)
+
+
+    ''' LISTA DE COLORES DE LAS CLASES '''
+    LISTA_COLORES = ['b', 'g', 'r', 'c']
+
+
+    ''' GRAFICANDO CONJUNTO ENTRENAMIENTO '''
+    for clase in range(4):
+        plt.scatter(X_train[y_train == clase, 0], X_train[y_train == clase, 1], c=LISTA_COLORES[clase], s=100)
+        plt.title("Conjunto de entrenamiento")
+
+
+    ''' GRAFICANDO CONJUNTO PRUEBA '''
+    for clase in range(4):
+        plt.scatter(X_test[y_test == clase, 0], X_test[y_test == clase, 1], c=LISTA_COLORES[clase], s=100)
+        plt.title("Conjunto de prueba")
+
+
+
 
     ''' ELIGIENDO UNA OBSERVACION '''
     x_2 = X_test[100, :]
