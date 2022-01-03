@@ -7,7 +7,6 @@ from sklearn.model_selection import train_test_split
 from typing import Union
 
 
-
 def _distancia_euclideana(x_1: np.array, x_2: np.array):
     ''' DISTANCIA EUCLIDEANA '''
     return np.sum((x_1 - x_2) ** 2)
@@ -45,7 +44,7 @@ def _knn_una_observacion(X_train: np.array, y_train: np.array, x_2: np.array, no
     return clase_predicha
 
 
-def knn_clasificacion(X_train, y_train, X_test, nombre_distancia, K) -> np.array:
+def knn_clasificacion(X_train: np.array, y_train: np.array, X_test: np.array, nombre_distancia: str, K: int) -> np.array:
     ''' KNN PARA UNA MATRIZ '''
     clases = [_knn_una_observacion(X_train, y_train, X_test[indice,:], nombre_distancia, K) for indice in tqdm.tqdm(range(X_test.shape[0]))]
     return np.array(clases)
@@ -75,26 +74,48 @@ if __name__ == '__main__':
 
     ''' GRAFICANDO CONJUNTO ENTRENAMIENTO '''
     for clase in range(4):
-        plt.scatter(X_train[y_train == clase, 0], X_train[y_train == clase, 1], c=LISTA_COLORES[clase], s=100)
-        plt.title("Conjunto de entrenamiento")
+        plt.scatter(X_train[y_train == clase, 0],
+                    X_train[y_train == clase, 1],
+                    c=LISTA_COLORES[clase],
+                    s=100)
+    plt.title("Conjunto de entrenamiento")
 
 
     ''' GRAFICANDO CONJUNTO PRUEBA '''
     for clase in range(4):
-        plt.scatter(X_test[y_test == clase, 0], X_test[y_test == clase, 1], c=LISTA_COLORES[clase], s=100)
-        plt.title("Conjunto de prueba")
+        plt.scatter(X_test[y_test == clase, 0],
+                    X_test[y_test == clase, 1],
+                    c=LISTA_COLORES[clase],
+                    s=100)
+    plt.title("Conjunto de prueba")
 
 
-
-
-    ''' ELIGIENDO UNA OBSERVACION '''
+    ''' SELECCIONANDO UNA OBSERVACION PARA PREDECIR '''
     x_2 = X_test[100, :]
-    
+
+    ''' VISUALIZANDO LA OBSERVACIÓN EN EL CONJUNTO ENTRENAMIENTO '''
+    for clase in range(4):
+        plt.scatter(X_train[y_train == clase, 0],
+                    X_train[y_train == clase, 1],
+                    c=LISTA_COLORES[clase],
+                    s=100,
+                    zorder=1)
+    plt.scatter(x_2[0], x_2[1], s=500, c='k', zorder=2)
+    plt.title("Visualizando la observación a predecir")
+
+
+    ''' CALCULANDO DISTANCIAS '''
     for i in range(X_train.shape[0]):
         target = y_train[i]
-        color = 'b' if target == 0 else 'g' if target == 1 else 'r' if target == 2 else 'c'
-        plt.scatter(x_2[0], x_2[1])
-        plt.plot([x_2[0], X_train[i, 0]], [x_2[1], X_train[i, 1]], color + 'o-', linewidth=0.5, markersize=0.2)
+        color = LISTA_COLORES[target]
+        plt.plot([x_2[0], X_train[i, 0]],
+                 [x_2[1], X_train[i, 1]],
+                 color + 'o-',
+                 linewidth=0.5,
+                 markersize=0.2,
+                 zorder=1)
+    plt.scatter(x_2[0], x_2[1], s=200, c='k', zorder=2)
+    plt.title("Visualizando las distancias")
 
 
     distancias = _calcula_distancias(X_train, x_2, 'euclidean')
