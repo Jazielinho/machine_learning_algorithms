@@ -7,20 +7,33 @@ from sklearn.model_selection import train_test_split
 from typing import Union
 
 
-def _distancia_euclideana(x_1: np.array, x_2: np.array):
+def _distancia_euclideana(x_1: np.array, x_2: np.array) -> float:
     ''' DISTANCIA EUCLIDEANA '''
-    return np.sum((x_1 - x_2) ** 2)
+    return np.sum((x_1 - x_2) ** 2) ** (1 / 2)
 
 
-def _distancia_manhattan(x_1: np.array, x_2: np.array):
+def _distancia_manhattan(x_1: np.array, x_2: np.array) -> float:
     ''' DISTANCIA MANHATTAN '''
-    return np.sum(np.abs(x_1 - x_2))
+    return np.sum(np.abs(x_1 - x_2)) ** 1.0
 
 
-def _calcula_distancias(X_train: np.array, x_2: np.array, nombre_distancia: str) -> np.array:
+def _distancia_minkowski(x_1: np.array, x_2: np.array, p: float) -> float:
+    ''' DISTANCIA MINKOWSKI '''
+    return np.sum(np.abs(x_1 - x_2) ** p) ** (1 / p)
+
+
+def _distancia(nombre_distancia: str, x_1: np.array, x_2: np.array, p: float) -> float:
+    ''' CALCULA LA DISTANCIA '''
+    if nombre_distancia == 'euclidean':
+        return _distancia_euclideana(x_1=x_1, x_2=x_2)
+    if nombre_distancia == 'manhattan':
+        return _distancia_manhattan(x_1=x_1, x_2=x_2)
+    return _distancia_minkowski(x_1=x_1, x_2=x_2, p=p)
+
+
+def _calcula_distancias(nombre_distancia: str, X_train: np.array, x_2: np.array, p: float) -> np.array:
     ''' CALCULA LA DISTANCIA DE UN VECTOR Y UNA MATRIZ '''
-    distancia_elegida = _distancia_euclideana if nombre_distancia == 'euclidean' else _distancia_manhattan
-    distancias = [distancia_elegida(X_train[indice, :], x_2) for indice in range(X_train.shape[0])]
+    distancias = [_distancia(nombre_distancia=nombre_distancia, x_1=X_train[indice, :], x_2=x_2, p=p) for indice in range(X_train.shape[0])]
     return np.array(distancias)
 
 
@@ -92,6 +105,35 @@ if __name__ == '__main__':
 
     ''' SELECCIONANDO UNA OBSERVACION PARA PREDECIR '''
     x_2 = X_test[100, :]
+
+
+    ''' DISTANCIA EUCLIDIANA '''
+    plt.scatter(X_train[1, 0], X_train[1, 1])
+    plt.text(X_train[1, 0], X_train[1, 1], "A", fontsize=20)
+    plt.scatter(x_2[0], x_2[1])
+    plt.text(x_2[0], x_2[1], "B", fontsize=20)
+
+
+    plt.scatter(X_train[1, 0], X_train[1, 1])
+    plt.scatter(x_2[0], x_2[1])
+    plt.plot([x_2[0], X_train[1, 0]],
+             [x_2[1], X_train[1, 1]],
+             'bo-',
+             linewidth=1,
+             markersize=1,
+             zorder=1)
+
+    _distancia_euclideana(X_train[1, :], x_2)
+
+
+    ''' DISTANCIA MANHATTAN '''
+    _distancia_manhattan(X_train[1, :], x_2)
+
+
+    ''' DISTANCIA MINKOWSKI '''
+    _distancia_minkowski(x_1=X_train[1, :], x_2=x_2, p=1)
+    _distancia_minkowski(x_1=X_train[1, :], x_2=x_2, p=2)
+
 
     ''' VISUALIZANDO LA OBSERVACIÓN EN EL CONJUNTO ENTRENAMIENTO '''
     for clase in range(4):
