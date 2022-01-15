@@ -7,8 +7,8 @@ from sklearn.model_selection import train_test_split
 from typing import Union
 
 
-def _distancia_euclideana(x_1: np.array, x_2: np.array) -> float:
-    ''' DISTANCIA EUCLIDEANA '''
+def _distancia_euclidiana(x_1: np.array, x_2: np.array) -> float:
+    ''' DISTANCIA EUCLIDIANA '''
     return np.sum((x_1 - x_2) ** 2) ** (1 / 2)
 
 
@@ -25,7 +25,7 @@ def _distancia_minkowski(x_1: np.array, x_2: np.array, p: float) -> float:
 def _distancia(nombre_distancia: str, x_1: np.array, x_2: np.array, p: float) -> float:
     ''' CALCULA LA DISTANCIA '''
     if nombre_distancia == 'euclidean':
-        return _distancia_euclideana(x_1=x_1, x_2=x_2)
+        return _distancia_euclidiana(x_1=x_1, x_2=x_2)
     if nombre_distancia == 'manhattan':
         return _distancia_manhattan(x_1=x_1, x_2=x_2)
     return _distancia_minkowski(x_1=x_1, x_2=x_2, p=p)
@@ -109,13 +109,15 @@ if __name__ == '__main__':
 
     ''' DISTANCIA EUCLIDIANA '''
     plt.scatter(X_train[1, 0], X_train[1, 1])
-    plt.text(X_train[1, 0], X_train[1, 1], "A", fontsize=20)
+    plt.text(X_train[1, 0], X_train[1, 1], "A", fontsize=40)
     plt.scatter(x_2[0], x_2[1])
-    plt.text(x_2[0], x_2[1], "B", fontsize=20)
+    plt.text(x_2[0], x_2[1], "B", fontsize=40)
 
 
     plt.scatter(X_train[1, 0], X_train[1, 1])
+    plt.text(X_train[1, 0], X_train[1, 1], "A", fontsize=40)
     plt.scatter(x_2[0], x_2[1])
+    plt.text(x_2[0], x_2[1], "B", fontsize=40)
     plt.plot([x_2[0], X_train[1, 0]],
              [x_2[1], X_train[1, 1]],
              'bo-',
@@ -123,7 +125,7 @@ if __name__ == '__main__':
              markersize=1,
              zorder=1)
 
-    _distancia_euclideana(X_train[1, :], x_2)
+    _distancia_euclidiana(X_train[1, :], x_2)
 
 
     ''' DISTANCIA MANHATTAN '''
